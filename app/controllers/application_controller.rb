@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  respond_to :json
+
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   private

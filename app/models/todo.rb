@@ -1,7 +1,8 @@
 class Todo < ApplicationRecord
   belongs_to :project
 
-  validates :todoname, :project, presence: true
+  validates :todoname, :project,
+            presence: true
 
   validate :ensure_not_checked, on: :create
 

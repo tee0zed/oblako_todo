@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: :show
 
   def index
-    render json: Project.with_todos.to_json
+    render json: Project.with_todos
   end
 
   def show
