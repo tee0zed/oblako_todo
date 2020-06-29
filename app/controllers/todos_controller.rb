@@ -3,12 +3,17 @@ class TodosController < ApplicationController
   before_action :set_or_create_project, only: :create
 
   def create
+    unless todo_params.present?
+      render json: @project, status: :ok, location: project_path(@project)
+      return
+    end
+
     @new_todo = @project.todos.build(todo_params)
 
     if @new_todo.save
-      render json: @new_todo
+      render json: @new_todo, status: :created, location: todos_path(@new_todo)
     else
-      render json: { error: @new_todo.errors }, status: 422
+      render json: @new_todo.errors, status: :unprocessable_entity
     end
   end
 
@@ -16,7 +21,7 @@ class TodosController < ApplicationController
     if @todo.toggle!(:checked)
       render json: @todo
     else
-      render json: { error: @todo.errors }, status: 422
+      render json: @todo.errors, status: :unprocessable_entity
     end
   end
 
@@ -27,18 +32,20 @@ class TodosController < ApplicationController
   end
 
   def set_or_create_project
-    if params[:project_id]
-      @project = Project.find_or_create_by!(params[:project_id])
+    @project = Project.find_or_initialize_by(project_params)
+
+    if @project.save
+      @project
     else
-      render json: { error: "Error occured!" }, status: 422
+      render json: @project.errors, status: :unprocessable_entity
     end
   end
 
   def todo_params
-    params.require(:todo).permit(:todoname)
+    params.fetch(:todo, {}).permit(:todoname)
   end
 
   def project_params
-    params.fetch(:project).permit(:projectname)
+    params.fetch(:project, {}).permit(:projectname, :id)
   end
 end

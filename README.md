@@ -14,3 +14,9 @@ image
     GET /projects - вернуть все проекты с задачами
     POST /todos - создать новую задачу
     PATCH /projects/id/todo/id - обновить задачу
+    
+### API принимает следующие параметры:  
+   
+   - todo[todoname] - имя задачи (string)
+   - project[projectname] - имя проекта (string)
+   - project[id] - id проекта (integer)
